@@ -19,6 +19,9 @@ import { AccessTokenGuard } from './guard/accessToken.guard';
 import { ClsMiddleware } from 'nestjs-cls';
 import { RequestLoggerMiddleware } from './middleware/requestLogger.middleware';
 import { ClsModule } from './cls/cls.module';
+import { QueueModule } from './queue/queue.module';
+
+
 
 const modules = [
   ConfigModule,
@@ -27,6 +30,7 @@ const modules = [
   LogModule,
   JwtModule,
   ClsModule,
+  QueueModule,
 ];
 const providers: ClassProvider[] = [];
 const interceptors: ClassProvider[] = [
