@@ -4,6 +4,9 @@ export const CacheServiceKey = Symbol('CacheServiceKey');
 export const RedisClientKey = Symbol('RedisClientKey');
 
 export const CacheKeys = {
+  RefreshToken: 'refresh-token/',
+  TokenBlacklist: 'token-blacklist/',
+  User: 'user/',
   UserRank: 'user-rank/',
 } as const;
 export type CacheKeys = Union<typeof CacheKeys>;
