@@ -7,12 +7,19 @@ import {
     FindOptionsOrder,
     FindOptionsRelations,
     FindOptionsWhere,
+    FindOptionsSelect,
     QueryRunner,
     Repository,
+    In
   } from 'typeorm';
   import { UuidEntity } from './base.entity';
 import { NotFoundException } from '@nestjs/common';
 import { OmitNotJoinedProps, OmitUppercaseProps } from './typeorm.interface';
+import { PaginationBuilder } from 'src/common/pagination/pagination.builder';
+import { PaginationRequest } from 'src/common/pagination/pagination.request';
+import { PaginationResponse } from 'src/common/pagination/pagination.response';
+import { Mutable } from 'src/common/type/common.interface';
+
 
   export class GenericTypeOrmRepository<
     T extends UuidEntity,
@@ -23,6 +30,33 @@ import { OmitNotJoinedProps, OmitUppercaseProps } from './typeorm.interface';
       queryRunner: QueryRunner,
     ) {
       super(target, manager, queryRunner);
+    }
+
+
+    async paginate(
+      pagination: PaginationRequest,
+      findOptionsWhere?:
+        | FindOptionsWhere<Mutable<T>>
+        | FindOptionsWhere<Mutable<T>>[],
+      orderOptions?: FindOptionsOrder<T>,
+      select?: FindOptionsSelect<T>,
+    ): Promise<PaginationResponse<OmitUppercaseProps<T>>> {
+      const { limit, page } = pagination;
+      const options: FindManyOptions<T> = {
+        take: limit,
+        skip: (page - 1) * limit,
+        where: findOptionsWhere as FindOptionsWhere<T>[],
+        order: orderOptions,
+        select,
+      };
+      const [data, total] = await this.findAndCount(options);
+  
+      return new PaginationBuilder<T>()
+        .setData(data)
+        .setPage(page)
+        .setLimit(limit)
+        .setTotalCount(total)
+        .build();
     }
 
     async findOneWithOmitNotJoinedProps<R extends FindOptionsRelations<T>>(
@@ -140,6 +174,12 @@ import { OmitNotJoinedProps, OmitUppercaseProps } from './typeorm.interface';
       if (!res) {
         throw new NotFoundException(`dont't exist ${id}`);
       }
+      return res;
+    }
+
+    async findByIds(ids: string[]) {
+      const findOption: FindManyOptions = { where: { id: In(ids) } };
+      const res = await this.find(findOption);
       return res;
     }
 
