@@ -5,7 +5,6 @@ import { Log } from 'src/schemas/log/log.schema';
 import { LoggerService } from 'src/core/logger/logger.service';
 import { MoinConfigService } from 'src/core/config/config.service';
 
-
 @Injectable()
 export class LogService {
   private readonly serviceName: string;
@@ -13,7 +12,7 @@ export class LogService {
   constructor(
     private readonly logRepository: LogRepository,
     private loggerService: LoggerService,
-   private configService: MoinConfigService,
+    private configService: MoinConfigService,
   ) {
     this.serviceName = this.configService.getAppConfig().NAME;
   }
@@ -22,7 +21,7 @@ export class LogService {
     level: LogLevels,
     message: string,
     requestId: string,
-    context: Log['context'],
+    context?: Log['context'],
     error?: Log['error'],
   ): Promise<void> {
     try {

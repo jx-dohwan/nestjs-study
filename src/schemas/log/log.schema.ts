@@ -1,10 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { plainToInstance, Transform } from 'class-transformer';
-
 import { Document } from 'mongoose';
-import { IsString } from 'class-validator';
 import { LogLevels } from './log.interface';
-
+import { IsString } from 'class-validator';
 
 export type LogDocument = Log & Document;
 
@@ -13,6 +11,7 @@ class LogError {
     type: String,
     required: true,
     maxlength: 1000,
+    index: true,
   })
   @Transform(({ value }) => value?.substring(0, 1000))
   message: string;
@@ -37,18 +36,15 @@ class LogContext {
 
   @Prop({
     type: String,
-    required: true,
+    required: false,
   })
-  method: string; // HTTP 메서드
+  method?: string; // HTTP 메서드
 
   @Prop({
     type: String,
-    required: true,
-    maxlength: 1000,
-    index: true,
+    required: false,
   })
-  @Transform(({ value }) => value?.substring(0, 1000))
-  url: string; // 요청 URL
+  url?: string; // 요청 URL
 
   @Prop({ type: Number })
   statusCode?: number; // HTTP 상태 코드
@@ -70,7 +66,6 @@ class LogContext {
   @Prop({ type: Number })
   duration?: number; // 요청 처리 시간 (ms)
 }
-
 
 @Schema({ timestamps: true, versionKey: false, collection: 'logs' })
 export class Log {
