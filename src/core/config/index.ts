@@ -4,6 +4,14 @@ export enum Env {
   dev = 'dev',
   prod = 'prod',
 }
+
+export interface JwtConfig {
+  JWT_ACCESS_SECRET: string;
+  JWT_REFRESH_SECRET: string;
+  JWT_ACCESS_EXPIRATION: string;
+  JWT_REFRESH_EXPIRATION: string;
+}
+
 export interface MongoDBConfig {
   MONGODB_URI: string;
   MONGODB_DATABASE: string;
@@ -34,4 +42,5 @@ export interface Configurations {
   DB: DBConfig;
   MONGODB: MongoDBConfig;
   REDIS: RedisConfig;
+  JWT: JwtConfig;
 }
