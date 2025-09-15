@@ -4,9 +4,9 @@ export const CacheServiceKey = Symbol('CacheServiceKey');
 export const RedisClientKey = Symbol('RedisClientKey');
 
 export const CacheKeys = {
-    User: 'user/',
-  } as const;
-  export type CacheKeys = Union<typeof CacheKeys>;
+  UserRank: 'user-rank/',
+} as const;
+export type CacheKeys = Union<typeof CacheKeys>;
 
 export interface ICacheOptions {
   key: string;

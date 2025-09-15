@@ -1,5 +1,12 @@
-import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
-import { User } from 'src/entities/user/user.entity';
+import {
+    Body,
+    Controller,
+    Get,
+    Param,
+    ParseUUIDPipe,
+    Patch,
+    Query,
+  } from '@nestjs/common';import { User } from 'src/entities/user/user.entity';
 import { UserService } from './user.service';
 
 @Controller('users')
