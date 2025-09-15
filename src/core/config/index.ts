@@ -5,6 +5,11 @@ export enum Env {
     prod = 'prod',
   }
   
+  export interface RedisConfig {
+    HOST: string;
+    PORT: number | string;
+  }
+
   export interface AppConfig {
     NAME: string;
     PORT: string | number;
@@ -24,4 +29,7 @@ export enum Env {
   export interface Configurations {
     APP: AppConfig;
     DB: DBConfig;
+    REDIS: RedisConfig;
   }
+
+
