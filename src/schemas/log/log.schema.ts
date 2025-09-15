@@ -29,10 +29,10 @@ class LogError {
 }
 
 class LogContext {
-  @Prop({ type: String })
+  @Prop({ type: String, index: true })
   callClass?: string; // 호출된 클래스명
 
-  @Prop({ type: String })
+  @Prop({ type: String, index: true })
   callMethod?: string; // 호출된 메서드명
 
   @Prop({
@@ -45,6 +45,7 @@ class LogContext {
     type: String,
     required: true,
     maxlength: 1000,
+    index: true,
   })
   @Transform(({ value }) => value?.substring(0, 1000))
   url: string; // 요청 URL
@@ -73,10 +74,14 @@ class LogContext {
 
 @Schema({ timestamps: true, versionKey: false, collection: 'logs' })
 export class Log {
+  @Prop({ type: String, required: true, index: true })
+  serviceName: string; // 서비스 이름
+
   @Prop({
     type: String,
     required: true,
     enum: Object.values(LogLevels),
+    index: true,
   })
   level: LogLevels;
 
@@ -89,7 +94,7 @@ export class Log {
 
   // 에러 정보를 위한 전용 필드
   @Prop({ type: LogError })
-  error: LogError;
+  error?: LogError;
 
   @Prop({ type: LogContext })
   context: LogContext;
