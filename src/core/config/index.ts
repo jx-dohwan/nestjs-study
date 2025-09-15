@@ -3,24 +3,25 @@ export enum Env {
     local = 'local',
     dev = 'dev',
     prod = 'prod',
-}
-
-export interface AppConfig {
+  }
+  
+  export interface AppConfig {
+    NAME: string;
     PORT: string | number;
     BASE_URL: string;
     NODE_ENV: string;
-    ENV:Env;
-}
-
-export interface DBConfig {
+    ENV: Env;
+  }
+  
+  export interface DBConfig {
     DB_HOST: string;
     DB_USER_NAME: string;
     DB_PASSWORD: string;
     DB_DATABASE: string;
     DB_PORT: number | string;
-}
-
-export interface Configurations {
+  }
+  
+  export interface Configurations {
     APP: AppConfig;
     DB: DBConfig;
-}
+  }
