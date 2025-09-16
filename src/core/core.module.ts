@@ -5,9 +5,9 @@ import {
   Module,
 } from '@nestjs/common';
 import { ConfigModule } from './config/config.module';
-import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR, APP_FILTER } from '@nestjs/core';
 import { ApiResponseInterceptor } from './interceptor/apiResponse.interceptor';
-import { ErrorInterceptor } from './interceptor/error.interceptor';
+import { ErrorFilter } from './filter/error.filter';
 import { TypeOrmModule } from './database/typeorm/typeorm.module';
 import { LoggerModule } from './logger/logger.module';
 import { CacheModule } from './cache/cache.module';
@@ -21,8 +21,6 @@ import { RequestLoggerMiddleware } from './middleware/requestLogger.middleware';
 import { ClsModule } from './cls/cls.module';
 import { QueueModule } from './queue/queue.module';
 
-
-
 const modules = [
   ConfigModule,
   LoggerModule,
@@ -34,7 +32,6 @@ const modules = [
 ];
 const providers: ClassProvider[] = [];
 const interceptors: ClassProvider[] = [
-  { provide: APP_INTERCEPTOR, useClass: ErrorInterceptor },
   { provide: APP_INTERCEPTOR, useClass: ApiResponseInterceptor },
 ];
 const guards: ClassProvider[] = [
@@ -47,7 +44,9 @@ const guards: ClassProvider[] = [
     useClass: AccessTokenGuard,
   },
 ];
-const filters: ClassProvider[] = [];
+const filters: ClassProvider[] = [
+  { provide: APP_FILTER, useClass: ErrorFilter },
+];
 
 @Global()
 @Module({
