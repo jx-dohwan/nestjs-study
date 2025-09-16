@@ -8,7 +8,7 @@ import {
   Response,
   UseGuards,
 } from '@nestjs/common';
-import { Response as ExpressResponse } from 'express';
+import { type Response as ExpressResponse, type Request as ExpressRequest } from 'express';
 import { AuthService } from './auth.service';
 import { User } from 'src/entities/user/user.entity';
 import { SignUpBody } from './dto/request/signUp.body';
