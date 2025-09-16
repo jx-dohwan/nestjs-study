@@ -9,12 +9,12 @@ import { User } from 'src/entities/user/user.entity';
 import { TokenPair } from 'src/core/jwt/jwt.interface';
 import { LoggerService } from 'src/core/logger/logger.service';
 import { IHashService, HASH_SERVICE } from 'src/core/hash/hash.interface';
+import { INotificationService, NOTIFICATION_SERVICE } from 'src/core/notification/notification.interface';
 import { Transactional } from 'typeorm-transactional';
 import { SignUpBody } from './dto/request/signUp.body';
 import { UserRepository } from '../user/repository/user.repository';
 import { SignInBody } from './dto/request/signIn.body';
 import { OmitUppercaseProps } from 'src/core/database/typeorm/typeorm.interface';
-
 
 @Injectable()
 export class AuthService {
@@ -23,12 +23,14 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly loggerService: LoggerService,
     @Inject(HASH_SERVICE) private readonly hashService: IHashService,
+    @Inject(NOTIFICATION_SERVICE) private readonly notificationService: INotificationService,
   ) {}
 
   async validateUser(
     email: string,
     password: string,
-  ): Promise<OmitUppercaseProps<User> | null> {    try {
+  ): Promise<OmitUppercaseProps<User> | null> {
+    try {
       const user = await this.userRepository.findOneByFilters({
         email,
       });
@@ -57,7 +59,7 @@ export class AuthService {
 
   @Transactional()
   async signUp(body: SignUpBody): Promise<void> {
-    const { email, password } = body;
+    const { email, password, nickname } = body;
 
     // Check if user already exists
     const existingUser = await this.userRepository.findOneByFilters({
@@ -72,6 +74,9 @@ export class AuthService {
 
     // Create user
     await this.userRepository.save(body.toEntity(hashedPassword));
+
+    // Send welcome notification
+    await this.notificationService.sendWelcomeNotification(email, nickname);
   }
 
   async signIn(body: SignInBody): Promise<TokenPair> {
