@@ -186,4 +186,9 @@ import { Mutable } from 'src/common/type/common.interface';
     async deleteAllForTest() {
       await this.delete({});
     }
+
+    async deleteById(id: string): Promise<void> {
+      await this.findByIdOrThrow(id);
+      await this.delete(id);
+    }
   }
