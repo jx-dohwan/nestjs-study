@@ -8,14 +8,21 @@
   "scripts": {
     "build": "nest build",
     "start": "NODE_ENV=local nest start --watch",
-    "test": "NODE_ENV=${npm_config_env:-test} TZ=utc jest --config jest.config.js --forceExit --logHeapUsage --no-compilation-cache --detectOpenHandles",
     "docker:up": "docker compose -f docker-compose.local.yml up --build -d",
     "docker:down": "docker compose -f docker-compose.local.yml down",
     "typeorm-ext": "cross-env NODE_ENV=${npm_config_env:-local} ts-node -r tsconfig-paths/register ./node_modules/typeorm-extension/bin/cli.cjs -d typeorm.config.ts",
     "entity:drop": "NODE_ENV=${npm_config_env:-test} ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js schema:drop -d ./typeorm.config.ts",
     "entity:sync": "NODE_ENV=${npm_config_env:-test} ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js schema:sync -d ./typeorm.config.ts",
     "seed": "cross-env npm run typeorm-ext seed:run",
-    "db:reset": "npm run entity:drop && npm run entity:sync && npm run seed"
+    "db:reset": "npm run entity:drop && npm run entity:sync && npm run seed",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage",
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "test:db:up": "docker-compose -f docker-compose.test.yml up -d",
+    "test:db:down": "docker-compose -f docker-compose.test.yml down -v",
+    "test:integration": "npm run test:db:up && jest --config ./test/jest-integration.json && npm run test:db:down"
   },
   "dependencies": {
     "@nestjs/bullmq": "^11.0.3",

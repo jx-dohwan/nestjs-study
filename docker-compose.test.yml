@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+  mysql-test:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: test_password
+      MYSQL_DATABASE: nestjs_practice_test
+      MYSQL_USER: test_user
+      MYSQL_PASSWORD: test_password
+    ports:
+      - "3307:3306"
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - mysql_test_data:/var/lib/mysql
+
+  redis-test:
+    image: redis:7-alpine
+    ports:
+      - "6380:6379"
+    command: redis-server --requirepass test_password
+
+volumes:
+  mysql_test_data:
