@@ -15,6 +15,7 @@
     "entity:sync": "NODE_ENV=${npm_config_env:-test} ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js schema:sync -d ./typeorm.config.ts",
     "seed": "cross-env npm run typeorm-ext seed:run",
     "db:reset": "npm run entity:drop && npm run entity:sync && npm run seed",
+    "mock:server": "prism mock http://localhost:3000/api-json -p 4010",
     "test": "jest --config \"$(pwd)/test/jest-unit.js\"",
     "test:watch": "jest --config \"$(pwd)/test/jest-unit.js\" --watch",
     "test:cov": "jest --config \"$(pwd)/test/jest-unit.js\" --coverage",
@@ -67,6 +68,7 @@
     "winston": "^3.17.0"
   },
   "devDependencies": {
+    "@stoplight/prism-cli": "^4.10.5",
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.18.0",
     "@nestjs/cli": "^11.0.0",
