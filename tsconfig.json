@@ -1,3 +1,38 @@
+// {
+//   "compilerOptions": {
+//     "module": "nodenext",
+//     "moduleResolution": "nodenext",
+//     "resolvePackageJsonExports": true,
+//     "esModuleInterop": true,
+//     "isolatedModules": true,
+//     "declaration": true,
+//     "removeComments": true,
+//     "emitDecoratorMetadata": true,
+//     "experimentalDecorators": true,
+//     "allowSyntheticDefaultImports": true,
+//     "target": "es2017",
+//     "sourceMap": true,
+//     "outDir": "./dist",
+//     "baseUrl": "./",
+//     "incremental": true,
+//     "skipLibCheck": true,
+//     "strictNullChecks": true,
+//     "forceConsistentCasingInFileNames": true,
+//     "noImplicitAny": true,
+//     "strictBindCallApply": true,
+//     "noFallthroughCasesInSwitch": true,
+//     "resolveJsonModule": true,
+//     "paths": {
+//       "@app/common": ["libs/common/src"],
+//       "@app/common/*": ["libs/common/src/*"],
+//       "@app/external": ["libs/external/src"],
+//       "@app/external/*": ["libs/external/src/*"],
+//       "@app/database": ["libs/database/src"],
+//       "@app/database/*": ["libs/database/src/*"],
+//       "types/*": ["types/*"]
+//     }
+//   }
+// }
 {
   "compilerOptions": {
     "module": "nodenext",
@@ -13,7 +48,7 @@
     "target": "es2017",
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./",
+    "baseUrl": ".",
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": true,
@@ -29,7 +64,12 @@
       "@app/external/*": ["libs/external/src/*"],
       "@app/database": ["libs/database/src"],
       "@app/database/*": ["libs/database/src/*"],
-      "types/*": ["types/*"]
+      "types/*": ["types/*"],
+
+      // ★ 추가
+      "src/*": ["src/*"],
+      "test/*": ["test/*"],
+      "libs/*": ["libs/*"]
     }
   }
 }
