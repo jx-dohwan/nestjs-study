@@ -19,6 +19,8 @@ import { ExtractJwt } from 'passport-jwt';
 import { Public } from 'src/core/decorator/public.decorator';
 import { RefreshTokenGuard } from 'src/core/guard/refreshToken.guard';
 import { Env } from 'src/core/config';
+import { ApiBadRequestResponse, ApiBearerAuth, ApiConflictResponse, ApiOperation, ApiResponse, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { SignInResponse } from './dto/response/signIn.response';
 
 @Controller('auth')
 export class AuthController {
@@ -48,6 +50,45 @@ export class AuthController {
     });
   }
 
+  @ApiOperation({
+    summary:'회원가입',
+    description:`
+      새로운 사용자 계정을 생성합니다.
+
+      **주의사항:**
+        - 이메일은 유일해야 합니다.
+        - 비밀번호는 최소 8자 이상이어야 합니다.
+        - 닉네임은 2-20자 사이여야 합니다.
+    `
+  })
+  @ApiResponse({
+    status: 201,
+    description: '회원가입 성공',
+    type: 'object',
+    example: {
+      message :'회원가입이 완료되었습니다.'
+    }
+  })
+  @ApiConflictResponse({
+    description: '이미 존재하는 이메일',
+    example: {
+      statusCode: 409,
+      message : 'User already exists',
+      error: 'Conflict'
+    }
+  })
+  @ApiBadRequestResponse({
+    description: '유효하지 않은 입력 데이터',
+    example: {
+      statusCode: 400,
+      message: [
+        'email must be an eamil',
+        'password must be longer than or equal to 8 characters',
+        'nickname must be longer than or equal to 2 characters'
+      ],
+      error: 'Bad Request'
+    }
+  })
   @Public()
   @Post('sign-up')
   @HttpCode(HttpStatus.CREATED)
@@ -55,6 +96,42 @@ export class AuthController {
     return this.authService.signUp(body);
   }
 
+  @ApiOperation({
+    summary: '로그인',
+    description: `
+      사용자 인증을 수행하고 JWT 토큰을 발급합니다.
+
+      **응답 정보:**
+        - accessToken: API 호출에 사용할 인증 토큰 (Header에 포함)
+        - refreshToken: HttpOnly 쿠키로 자동 저장됨
+
+      **토큰 유효기간:**
+        - accessToken: 1시간
+        - refreshToken: 7일
+    `
+  })
+  @ApiResponse({
+    status: 200,
+    description: '로그인 성공',
+    type: SignInResponse,
+    headers: {
+      'Set-Cokkie': {
+        description: 'HttpOnly 쿠키로 설정되는 refrreshToken',
+        schema: {
+          type: 'string',
+          example: 'refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...; HttpOnly; Secure; SameSite=Strict; Max-Age=604800'
+        }
+      }
+    }
+  })
+  @ApiUnauthorizedResponse({
+    description: '로그인 실패 (잘못된 이메일 또는 비밀번호)',
+    example: {
+      statusCode: 401,
+      message: 'Invalid credentials',
+      error:'Unauthorized'
+    }
+  })
   @Public()
   @Post('sign-in')
   @HttpCode(HttpStatus.OK)
@@ -68,6 +145,28 @@ export class AuthController {
     return { accessToken: tokenPair.accessToken };
   }
 
+  @ApiOperation({
+    summary:'로그아웃',
+    description: `
+      현재 사용자를 로그아웃시키고 토큰을 무효화합니다.
+
+      **처리 내용:**
+      1. 현재 accessToken을 블랙리스트에 추가
+      2. 사용자의 모든 refreshToken 무효화
+      3. refreshToken 쿠키 삭제
+    `
+  })
+  @ApiResponse({
+    status:200,
+    description: '로그아웃 성공',
+    example: {
+      message:'로그아웃이 완료되었습니다.'
+    }
+  })
+  @ApiUnauthorizedResponse({
+    description:'인증되지 않은 사용자',
+  })
+  @ApiBearerAuth('JWT-auth')
   @Post('sign-out')
   @HttpCode(HttpStatus.OK)
   async signOut(
