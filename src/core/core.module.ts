@@ -50,7 +50,7 @@ const filters: ClassProvider[] = [
 
 @Global()
 @Module({
-  imports: [TypeOrmModule.forRoot(), MongooseModule.forRoot(), ...modules],
+  imports: [TypeOrmModule.forRoot(), ...modules], //  MongooseModule.forRoot(),
   providers: [...providers, ...interceptors, ...filters, ...guards],
   exports: [...modules, ...providers],
 })
