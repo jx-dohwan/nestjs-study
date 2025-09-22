@@ -3,7 +3,10 @@ import { MockCacheService } from './cache.service';
 import {
   CacheServiceKey,
   ICacheOptions,
+} from './cache.interface';
+import type {
   ICacheService,
+
 } from './cache.interface';
 import {
   DiscoveryModule,

@@ -2,7 +2,10 @@ import { Inject, Injectable } from '@nestjs/common';
 import {
   CacheKeys,
   CacheServiceKey,
+} from 'src/core/cache/cache.interface';
+import type {
   ICacheService,
+
 } from 'src/core/cache/cache.interface';
 
 @Injectable()

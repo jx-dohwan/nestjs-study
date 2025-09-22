@@ -4,7 +4,10 @@ import { MoinConfigService } from 'src/core/config/config.service';
 import {
   CacheKeys,
   CacheServiceKey,
+} from 'src/core/cache/cache.interface';
+import type {
   ICacheService,
+
 } from 'src/core/cache/cache.interface';
 import { LoggerService } from 'src/core/logger/logger.service';
 import {
